@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.creditease.cn/schema/mapper" xsi:schemaLocation="http://www.creditease.cn/schema/mapper http://www.creditease.cn/schema/mapper/mapper-1.0.xsd">
+	<rule id="testRule" left-type="cn.zxl.mapper.spring.Book" right-type="cn.zxl.mapper.spring.Note">
+		<relation left-name="id" right-name="idNote"/>
+		<relation left-name="age" right-name="ageNote" />
+		<relation left-name="date" right-name="date" date-format="yyyy-MM-dd"/>
+		<relation left-name="innerBook" right-name="innerNote" rule="testInnerRule"/>
+		<relation left-name="name" right-name="nameNote" />
+		<relation left-name="innerNote" right-name="innerNote"/>
+	</rule>
+	
+	<rule id="testInnerRule" left-type="cn.zxl.mapper.spring.InnerBook" right-type="cn.zxl.mapper.spring.InnerNote">
+		<relation left-name="name" right-name="id"/>
+		<relation left-name="summary" right-name="field"/>
+		<relation left-name="number" right-name="summary"/>
+	</rule> 
+	
+	<rule id="testReverseRule" left-type="cn.zxl.mapper.spring.Book" right-type="cn.zxl.mapper.spring.Note">
+		<relation left-name="id" right-name="idNote"/>
+		<relation left-name="age" right-name="ageNote" />
+		<relation left-name="date" right-name="date" date-format="yyyy-MM-dd"/>
+		<relation left-name="innerBook" right-name="innerNote" rule="testInnerReverseRule" reverse="true"/>
+		<relation left-name="name" right-name="nameNote" />
+	</rule>
+	
+	<rule id="testInnerReverseRule" left-type="cn.zxl.mapper.spring.InnerNote" right-type="cn.zxl.mapper.spring.InnerBook">
+		<relation right-name="name" left-name="id"/>
+		<relation right-name="summary" left-name="field"/>
+		<relation right-name="number" left-name="summary"/>
+	</rule>
+	
+	<map id="testEmptyRuleMap" direction="left-to-right" rule="testRule" >
+		<set left-field-name="id" />
+		<set left-field-name="age" if-target-is-null="true"/>
+		<set left-field-name="date" />
+		<set left-field-name="name" if-target-is-empty="true"/>
+		<set left-field-name="innerNote.id" if-source-is-not-empty="true"/>
+		<set left-field-name="innerNote.field" />
+	</map>
+
+	<map id="testMap" direction="left-to-right" rule="testRule" >
+		<set left-field-name="id" />
+		<set left-field-name="age" if-target-is-null="true"/>
+		<set left-field-name="date" />
+		<set left-field-name="name" if-target-is-empty="true"/>
+		<set left-field-name="innerBook.name" if-source-is-not-empty="true"/>
+		<set left-field-name="innerBook.number" />
+	</map>
+	
+	<map id="testReverseMap" direction="left-to-right" rule="testReverseRule" >
+		<set left-field-name="id" />
+		<set left-field-name="age" if-target-is-null="true"/>
+		<set left-field-name="date" />
+		<set left-field-name="name" if-target-is-empty="true"/>
+		<set left-field-name="innerBook.name" if-source-is-not-empty="true"/>
+		<set left-field-name="innerBook.number" />
+	</map>
+	
+	<map type="cn.zxl.mapper.spring.Book" id="testTypeRule1">
+		<set left-field-name="*"/>
+	</map>
+	
+	<map type="cn.zxl.mapper.spring.Book" id="testTypeRule2">
+		<set left-field-name="age"/>
+		<set left-field-name="innerBook.*"/>
+	</map>
+	
+	<map type="cn.zxl.mapper.spring.Book" id="testTypeRule3">
+		<set left-field-name="*" if-target-is-null="true"/>
+	</map>
+
+</mapper>
+
+

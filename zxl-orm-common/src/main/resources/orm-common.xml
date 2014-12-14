@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+	 	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	 	http://www.springframework.org/schema/tx
+	 	http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	 	http://www.springframework.org/schema/aop
+	 	http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+	 	http://www.springframework.org/schema/context
+	 	http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<context:component-scan base-package="cn.zxl.orm.common"></context:component-scan>		
+
+	<bean id="jdbcPropertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    	<property name="order" value="1"/>
+    	<property name="ignoreUnresolvablePlaceholders" value="true"/>
+    	<property name="ignoreResourceNotFound" value="true"/>
+    	<property name="locations">
+    		<array>
+    			<value>classpath:jdbc.properties</value>
+    		</array>
+    	</property>
+	</bean>
+	
+	<bean id="databaseConfigurer" class="cn.zxl.orm.common.spring.DatabaseConfigurer">
+    	<property name="order" value="2"/>
+	</bean>
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${driverClassName}" />
+		<property name="url" value="${url}" />
+		<property name="username" value="${username}" />
+		<property name="password" value="${password}" />
+		<property name="initialSize" value="${initialSize}" />
+		<property name="maxActive" value="${maxActive}" />
+		<property name="maxIdle" value="${maxIdle}" />
+		<property name="minIdle" value="${minIdle}" />
+	</bean>
+	
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="entityInterceptor" ref="entityInterceptor"/>
+		<property name="packagesToScan" ref="hibernateDomainPackages" />
+		<property name="hibernateProperties" ref="hibernateProperties"/>
+	    <property name="namingStrategy">
+			<bean class="cn.zxl.orm.common.HibernateNamingStrategy">
+				<property name="prefix" ref="tablePrefix"/>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:mybatis-config.xml"/>
+		<property name="mapperLocations" value="classpath*:mybatis/*.xml" />
+	</bean>
+	
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+	
+	<bean id="abstractSessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean" abstract="true">
+		<property name="entityInterceptor" ref="entityInterceptor"/>
+		<property name="hibernateProperties">
+			<value>
+				hibernate.dialect=org.hibernate.dialect.Oracle10gDialect
+				hibernate.cache.provider_class=org.hibernate.cache.internal.NoCachingRegionFactory
+				hibernate.current_session_context_class=org.springframework.orm.hibernate4.SpringSessionContext
+				hibernate.show_sql=true
+				hibernate.hbm2ddl.auto=validate
+			</value>
+		</property>
+	</bean>
+	
+	<bean id="abstractSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" abstract="true">
+		<property name="configLocation" value="classpath:mybatis-config.xml"/>
+	</bean>
+	
+	<bean id="commonBaseDao" class="cn.zxl.orm.common.CommonBaseDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="sqlSessionTemplate" ref="sqlSessionTemplate"/>
+		<property name="tablePrefix" ref="tablePrefix"></property>
+	</bean>
+	
+	<bean id="commonBaseService" class="cn.zxl.orm.common.CommonBaseServiceImpl">
+		<property name="commonBaseDao" ref="commonBaseDao"/>
+	</bean>
+	
+</beans>

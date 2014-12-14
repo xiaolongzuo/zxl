@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper-global xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.creditease.cn/schema/mapper-global" 
+	xsi:schemaLocation="http://www.creditease.cn/schema/mapper-global http://www.creditease.cn/schema/mapper/mapper-global-1.0.xsd">
+	
+	<mapper-mode>dev</mapper-mode>
+	
+	<mapper-path>mapper</mapper-path>
+	
+</mapper-global>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:core="http://zxl.cn/schema/core"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	 http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	 http://www.springframework.org/schema/tx
+	 http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	 http://www.springframework.org/schema/jee
+	 http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
+	 http://www.springframework.org/schema/aop
+	 http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+	 http://www.springframework.org/schema/context
+	 http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	 http://zxl.cn/schema/core        
+     http://zxl.cn/schema/core/core-1.0.xsd"
+	default-lazy-init="true">
+
+	<description>Spring公共配置</description>
+	
+	<import resource="classpath:orm-hbase.xml"/>
+	
+	<context:component-scan base-package="cn.zxl.core.hbase"></context:component-scan>
+	
+	<bean id="hbaseDomainPackages" class="cn.zxl.core.common.spring.StringArrayFactoryBean">
+		<property name="values">
+			<list>
+				<value>cn.zxl.core.hbase.domain</value>
+			</list>
+		</property>
+	</bean>	
+	
+	<core:string value="172800" id="timeToLive"/>
+	
+</beans>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns="http://zxl.cn/schema/mapper" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://zxl.cn/schema/mapper">
+
+	<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+
+	<!-- Top-level <mapper> tag -->
+	<xsd:element name="mapper">
+		<xsd:complexType>
+			<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="rule" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+				<xsd:element ref="map" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="rule">
+		<xsd:annotation>
+			<xsd:documentation>rule元素定义一套映射规则</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="relation" minOccurs="1" maxOccurs="unbounded"></xsd:element>
+			</xsd:sequence>
+			<xsd:attribute name="id" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation>rule元素id</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="left-type" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation>映射左侧对象的类型</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="right-type" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation>映射右侧对象的类型</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="relation">
+		<xsd:annotation>
+			<xsd:documentation>relation元素定义字段级别的映射规则</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="left-name" use="required" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>左侧属性名</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="right-name" use="required" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>右侧属性名</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="date-format" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>当string与date互相转换时可指定该元素，默认格式为yyyy-MM-dd</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="rule" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>当属性为bean类型时，可以指定该元素作为嵌套规则</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="reverse" type="xsd:boolean">
+				<xsd:annotation>
+					<xsd:documentation>当rule属性被指定时，可指定该元素定义规则的方向</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="map">
+		<xsd:annotation>
+			<xsd:documentation>一个map定义一个转换规则，在执行转换时，需要指定map的id</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="set" minOccurs="1" maxOccurs="unbounded"></xsd:element>
+			</xsd:sequence>
+			<xsd:attribute name="id" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation>map对象id</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="rule" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>指定map对象所基于的映射规则，如果不指定，则必须指定type属性</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="type" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>该属性不为空时表示的是两个类型相同对象的转换</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="direction" type="directionEnum">
+				<xsd:annotation>
+					<xsd:documentation>指定rule对象的方向</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:simpleType name="directionEnum">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="left-to-right"></xsd:enumeration>
+			<xsd:enumeration value="right-to-left"></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:element name="set">
+		<xsd:annotation>
+			<xsd:documentation>一个set对象表示字段级别的具体转换规则</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="left-field-name" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation>指定一组字段转换，通过左边的属性名定义。支持通配符‘*’，如果指定嵌套字段，可使用‘.’隔开。</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="if-source-is-not-null" type="xsd:boolean">
+				<xsd:annotation>
+					<xsd:documentation>当源不为空时才转换</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="if-source-is-not-empty" type="xsd:boolean">
+				<xsd:annotation>
+					<xsd:documentation>当源不为空时才转换</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="if-target-is-null" type="xsd:boolean">
+				<xsd:annotation>
+					<xsd:documentation>当目标为空时才转换</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="if-target-is-empty" type="xsd:boolean">
+				<xsd:annotation>
+					<xsd:documentation>当目标为空时才转换</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+</xsd:schema>

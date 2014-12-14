@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:core="http://zxl.cn/schema/orm-common"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	 http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	 http://www.springframework.org/schema/tx
+	 http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	 http://www.springframework.org/schema/jee
+	 http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
+	 http://www.springframework.org/schema/aop
+	 http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+	 http://www.springframework.org/schema/context
+	 http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	 http://zxl.cn/schema/orm-common      
+     http://zxl.cn/schema/orm-common/orm-common-1.0.xsd">
+
+	<import resource="classpath:orm-common.xml" />
+
+	<import resource="classpath:orm-service.xml" />
+
+	<context:component-scan base-package="cn.zxl.orm.common"></context:component-scan>
+
+	<core:string-array id="hibernateDomainPackages">
+		<value>cn.zxl.orm.common.domain</value>
+	</core:string-array>
+
+	<core:properties id="hibernateProperties">
+		hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+		hibernate.cache.provider_class=org.hibernate.cache.internal.NoCachingRegionFactory
+		hibernate.current_session_context_class=org.springframework.orm.hibernate4.SpringSessionContext
+		hibernate.show_sql=true
+		hibernate.hbm2ddl.auto=update
+	</core:properties>
+
+	<core:string value="core" id="tablePrefix" />
+
+	<aop:config proxy-target-class="true">
+		<aop:pointcut expression="execution(* cn.zxl.orm.common.service.impl.*.*(..))"
+			id="coreServicePointcut" />
+		<aop:advisor advice-ref="hibernateAdvice" pointcut-ref="coreServicePointcut" />
+	</aop:config>
+
+</beans>

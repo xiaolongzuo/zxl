@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns="http://zxl.cn/schema/mapper-global"
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		targetNamespace="http://zxl.cn/schema/mapper-global">
+ 
+	<xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+
+	<!-- Top-level <mapper> tag -->
+	<xsd:element name="mapper-global">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="mapper-mode" minOccurs="1" maxOccurs="1"></xsd:element>
+				<xsd:element ref="mapper-path" minOccurs="1" maxOccurs="1"></xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="mapper-mode" type="modeEnum"></xsd:element>
+	
+	<xsd:simpleType name="modeEnum">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="dev"></xsd:enumeration>
+			<xsd:enumeration value="pro"></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:element name="mapper-path" type="xsd:string"></xsd:element>
+	
+</xsd:schema>

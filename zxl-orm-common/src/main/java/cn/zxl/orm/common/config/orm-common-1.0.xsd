@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://zxl.cn/schema/orm-common" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tool="http://www.springframework.org/schema/tool"
+	xmlns:beans="http://www.springframework.org/schema/beans" targetNamespace="http://zxl.cn/schema/orm-common"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xsd:import namespace="http://www.springframework.org/schema/beans" schemaLocation="http://www.springframework.org/schema/beans/spring-beans-4.0.xsd" />
+	<xsd:import namespace="http://www.springframework.org/schema/tool" schemaLocation="http://www.springframework.org/schema/tool/spring-tool-4.0.xsd" />
+	
+	<xsd:element name="mul-transaction-expression">
+		<xsd:complexType>
+			<xsd:attribute name="expression" use="required" type="xsd:string"></xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="mul-common-base-service">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="mul-transaction-expression" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="beans:property" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+			<xsd:attribute name="name" use="required" type="xsd:string"></xsd:attribute>
+			<xsd:attribute name="table-prefix" use="required" type="xsd:string"></xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="string">
+		<xsd:complexType>
+			<xsd:attribute name="id" use="required" type="xsd:string"></xsd:attribute>
+			<xsd:attribute name="value" use="required" type="xsd:string"></xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="properties">
+		<xsd:complexType mixed="true">
+			<xsd:attribute name="id" use="required" type="xsd:string"></xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="string-array">
+		<xsd:complexType>
+			<xsd:sequence minOccurs="1" maxOccurs="unbounded">
+				<xsd:element ref="beans:value"></xsd:element>
+			</xsd:sequence>
+			<xsd:attribute name="id" use="required" type="xsd:string"></xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	
+</xsd:schema>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+	 	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	 	http://www.springframework.org/schema/tx
+	 	http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	 	http://www.springframework.org/schema/aop
+	 	http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+	 	http://www.springframework.org/schema/context
+	 	http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<bean id="hibernateTransactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<tx:advice id="hibernateAdvice" transaction-manager="hibernateTransactionManager">
+		<tx:attributes>
+			<tx:method name="save*" propagation="REQUIRED"/>
+			<tx:method name="merge*" propagation="REQUIRED"/>
+			<tx:method name="update*" propagation="REQUIRED"/>
+			<tx:method name="delete*" propagation="REQUIRED"/>
+			<tx:method name="send*" propagation="REQUIRED"/>
+			<tx:method name="persist*" propagation="REQUIRED"/>
+			<tx:method name="get*" read-only="true" />
+		</tx:attributes>
+	</tx:advice>
+	
+	<aop:config>
+		<aop:pointcut expression="execution(* cn.zxl.orm.common.BaseServiceImpl.*(..))" id="baseServicePointcut" />
+		<aop:advisor advice-ref="hibernateAdvice" pointcut-ref="baseServicePointcut"/>
+	</aop:config>
+	
+	<aop:config>
+		<aop:pointcut expression="execution(* cn.zxl.orm.common.CommonBaseServiceImpl.*(..))" id="commonBaseServicePointcut" />
+		<aop:advisor advice-ref="hibernateAdvice" pointcut-ref="commonBaseServicePointcut"/>
+	</aop:config>
+	
+	<aop:config>
+		<aop:pointcut expression="execution(* cn.zxl.orm.common.service.impl.*.*(..))" id="securityPointcut" />
+		<aop:advisor advice-ref="hibernateAdvice" pointcut-ref="securityPointcut"/>
+	</aop:config>
+	
+</beans>

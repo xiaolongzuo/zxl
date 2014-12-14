@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://zxl.cn/schema/mq-rabbit" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tool="http://www.springframework.org/schema/tool"
+	xmlns:beans="http://www.springframework.org/schema/beans" targetNamespace="http://zxl.cn/schema/mq-rabbit"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xsd:import namespace="http://www.springframework.org/schema/beans" schemaLocation="http://www.springframework.org/schema/beans/spring-beans-4.0.xsd" />
+	<xsd:import namespace="http://www.springframework.org/schema/tool" schemaLocation="http://www.springframework.org/schema/tool/spring-tool-4.0.xsd" />
+	
+	<xsd:element name="mq-client">
+		<xsd:complexType>
+			<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="beans:property"/>
+			</xsd:sequence>
+			<xsd:attribute name="id" use="required" type="xsd:string"></xsd:attribute>
+			<xsd:attribute name="routing-key" use="required" type="xsd:string"></xsd:attribute>
+			<xsd:attribute name="addresses" type="xsd:string"></xsd:attribute>
+			<xsd:attribute name="exchange" type="xsd:string"></xsd:attribute>
+			<xsd:attribute name="queue-durable" type="xsd:boolean"></xsd:attribute>
+			<xsd:attribute name="queue-exclusive" type="xsd:boolean"></xsd:attribute>
+			<xsd:attribute name="queue-auto-delete" type="xsd:boolean"></xsd:attribute>
+			<xsd:attribute name="properties-file-path" type="xsd:string"></xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="mq-server">
+		<xsd:complexType>	
+			<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="beans:property"/>
+			</xsd:sequence>
+			<xsd:attribute name="id" use="required" type="xsd:string"></xsd:attribute>
+			<xsd:attribute name="target-object" use="required" type="xsd:string"></xsd:attribute>
+			<xsd:attribute name="target-method" use="required" type="xsd:string"></xsd:attribute>
+			<xsd:attribute name="queue-name" use="required" type="xsd:string"></xsd:attribute>
+			<xsd:attribute name="addresses" type="xsd:string"></xsd:attribute>
+			<xsd:attribute name="local-address" type="xsd:string"></xsd:attribute>
+			<xsd:attribute name="receive-message-class-name" type="xsd:string"></xsd:attribute>
+			<xsd:attribute name="queue-durable" type="xsd:boolean"></xsd:attribute>
+			<xsd:attribute name="queue-exclusive" type="xsd:boolean"></xsd:attribute>
+			<xsd:attribute name="queue-auto-delete" type="xsd:boolean"></xsd:attribute>
+			<xsd:attribute name="properties-file-path" type="xsd:string"></xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	
+</xsd:schema>

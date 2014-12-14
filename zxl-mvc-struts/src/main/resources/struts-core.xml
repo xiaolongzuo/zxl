@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>       
+<!DOCTYPE struts PUBLIC 
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<constant name="struts.locale" value="zh_CN" />
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+	<constant name="struts.devMode" value="false" />
+	<constant name="struts.convention.default.parent.package" value="defaultPackage" />
+	<constant name="struts.convention.package.locators" value="action" />
+	<constant name="struts.convention.result.path" value="/" />
+
+	<package name="defaultPackage" extends="convention-default">
+		<default-action-ref name="errorPage" />
+		<global-results>
+			<result name="error-page-500">/error_page_500.jsp</result>
+		</global-results>
+		<global-exception-mappings>
+			<exception-mapping result="error-page-500" exception="java.lang.Exception" ></exception-mapping>
+		</global-exception-mappings>
+		<action name="errorPage" class="cn.zxl.core.common.struts.DefaultAction">
+			<result type="redirect" name="error-page-404">/error_page_404.jsp</result>
+		</action>
+	</package>
+
+</struts> 

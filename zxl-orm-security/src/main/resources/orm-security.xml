@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:b="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:core="http://zxl.cn/schema/core"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/security 
+        http://www.springframework.org/schema/security/spring-security-3.2.xsd
+        http://www.springframework.org/schema/context
+	 	http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	 	http://www.springframework.org/schema/aop
+	 	http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+	 	http://zxl.cn/schema/core 	
+	 	http://zxl.cn/schema/core/core-1.0.xsd">
+	 	
+	<context:component-scan base-package="cn.zxl.orm.security.filter"></context:component-scan>
+
+	<b:bean id="databaseConfigurer" class="cn.zxl.orm.common.spring.DatabaseConfigurer">
+    	<b:property name="order" value="3"/>
+    	<b:property name="locations">
+    		<b:array>
+    			<b:value>classpath:default-security-setting.properties</b:value>
+    		</b:array>
+    	</b:property>
+	</b:bean>
+
+	<http pattern="/**/*.jpg" security="none" />
+	<http pattern="/**/*.png" security="none" />
+	<http pattern="/**/*.gif" security="none" />
+	<http pattern="/**/*.css" security="none" />
+	<http pattern="/**/*.js" security="none" />
+	<http pattern="/login.jsp*" security="none" />
+	<http pattern="/webservice/**/*" security="none" />
+
+	<global-method-security pre-post-annotations="enabled"/>
+	
+	<http authentication-manager-ref="authenticationManager" entry-point-ref="authenticationEntryPoint">
+
+		<intercept-url pattern="/**" access="${accessRole}" />
+		
+		<session-management>
+			<concurrency-control max-sessions="1" error-if-maximum-exceeded="false" expired-url="${loginPage}?error=您的账号在其它地方被登录!"/>
+		</session-management>
+		
+		<custom-filter ref="logoutFilter" position="LOGOUT_FILTER"/>
+		<custom-filter ref="usernamePasswordAuthenticationFilter" position="FORM_LOGIN_FILTER"/>
+		<custom-filter ref="resourceSecurityFilter" before="FILTER_SECURITY_INTERCEPTOR"/>
+		<custom-filter ref="rememberMeAuthenticationFilter" position="REMEMBER_ME_FILTER"/>
+	</http>
+	
+	<core:string id="referers" value="${referers}"></core:string>
+	 
+	<b:bean id="securityContextLogoutHandler" class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"></b:bean>
+	
+	<b:bean id="logoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+		<b:constructor-arg index="0" value="/"/>
+		<b:constructor-arg>
+			<b:array>
+				<b:ref bean="securityContextLogoutHandler"/>
+				<b:ref bean="persistentTokenBasedRememberMeServices"/>
+			</b:array>
+		</b:constructor-arg>
+	</b:bean>
+	
+	<b:bean id="authenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+		<b:property name="loginFormUrl" value="${loginPage}"/>
+	</b:bean>
+
+	<b:bean id="usernamePasswordAuthenticationFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+		<b:property name="authenticationManager" ref="authenticationManager" />
+		<b:property name="rememberMeServices" ref="persistentTokenBasedRememberMeServices"/>
+		<b:property name="authenticationFailureHandler" ref="defaultAuthenticationFailureHandler"/>
+		<b:property name="authenticationSuccessHandler" ref="defaultAuthenticationSuccessHandler"/>
+	</b:bean>
+	
+	<b:bean id="defaultAuthenticationSuccessHandler" class="cn.zxl.orm.security.filter.SavedRequestAwareAuthenticationSuccessHandler">
+		<b:property name="defaultTargetUrl" value="${indexPage}" />
+		<b:property name="alwaysUseDefaultTargetUrl" value="true" />
+		<b:property name="salt" ref="randomCodeSalt"/>
+	</b:bean>
+	
+	<b:bean id="defaultAuthenticationFailureHandler" class="cn.zxl.orm.security.filter.DefaultAuthenticationFailureHandler">
+		<b:property name="loginUrl" value="${loginPage}" />
+	</b:bean>
+	
+	<b:bean id="rememberMeAuthenticationFilter" class="org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter">
+		<b:property name="authenticationManager" ref="authenticationManager"/>
+		<b:property name="rememberMeServices" ref="persistentTokenBasedRememberMeServices"/>
+	</b:bean>
+	
+	<b:bean id="persistentTokenBasedRememberMeServices" class="org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices">
+		<b:constructor-arg index="0" value="username"/>	
+		<b:constructor-arg index="1" ref="userService"/>	
+		<b:constructor-arg index="2" ref="jdbcTokenRepository"/>	
+	</b:bean>
+	
+	<b:bean id="rememberMeAuthenticationProvider" class="org.springframework.security.authentication.RememberMeAuthenticationProvider">
+		<b:property name="key" value="username"/>
+	</b:bean>
+	
+	<b:bean id="resourceSecurityFilter" class="cn.zxl.orm.security.filter.ResourceSecurityFilter">  
+        <b:property name="authenticationManager" ref="authenticationManager" />  
+        <b:property name="accessDecisionManager" ref="resourceAccessDecisionManager" />  
+        <b:property name="securityMetadataSource" ref="resourceSecurityMetadataSource" />  
+    </b:bean>  
+
+	<authentication-manager alias="authenticationManager">
+		<authentication-provider user-service-ref="userService" >
+			<password-encoder hash="md5">
+				<salt-source user-property="username"/>
+			</password-encoder>
+		</authentication-provider>
+		<authentication-provider ref="rememberMeAuthenticationProvider"/>
+	</authentication-manager>
+	
+	<aop:config>
+		<aop:pointcut expression="execution(* cn.zxl.orm.security.service.impl.*.*(..))" id="securityPointcut" />
+		<aop:advisor advice-ref="hibernateAdvice" pointcut-ref="securityPointcut"/>
+	</aop:config>
+
+</b:beans>
