@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XmlBean>
+	<stringParam>stringValue</stringParam>
+	<dateParam>2014-12-14 08</dateParam>
+	<testParam>
+		<stringParam>stringValue</stringParam>
+		<dateParam>2014-12-14 08</dateParam>
+		<testParam>
+			<stringParam>stringValue</stringParam>
+			<dateParam>2014-12-14 08</dateParam>
+			<testParam>
+				<stringParam>stringValue</stringParam>
+				<dateParam>2014-12-14 08</dateParam>
+			</testParam>
+			<testListParam>
+				<XmlBean>
+					<stringParam>stringValue</stringParam>
+					<dateParam>2014-12-14 08</dateParam>
+					<testListParam>
+						<XmlBean>
+							<stringParam>stringValue</stringParam>
+							<dateParam>2014-12-14 08</dateParam>
+						</XmlBean>
+						<XmlBean>
+							<stringParam>stringValue</stringParam>
+							<dateParam>2014-12-14 08</dateParam>
+						</XmlBean>
+					</testListParam>
+				</XmlBean>
+				<XmlBean>
+					<stringParam>stringValue</stringParam>
+					<dateParam>2014-12-14 08</dateParam>
+				</XmlBean>
+				<XmlBean>
+					<stringParam>stringValue</stringParam>
+					<dateParam>2014-12-14 08</dateParam>
+				</XmlBean>
+				<XmlBean>
+					<stringParam>stringValue</stringParam>
+					<dateParam>2014-12-14 08</dateParam>
+				</XmlBean>
+				<XmlBean>
+					<stringParam>stringValue</stringParam>
+					<dateParam>2014-12-14 08</dateParam>
+				</XmlBean>
+			</testListParam>
+		</testParam>
+	</testParam>
+</XmlBean>
