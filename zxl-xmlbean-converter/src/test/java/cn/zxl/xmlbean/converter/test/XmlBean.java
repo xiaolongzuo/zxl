@@ -1,6 +1,8 @@
 package cn.zxl.xmlbean.converter.test;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,11 +22,19 @@ public class XmlBean implements Serializable{
 	private String stringParam = "stringValue";
 	
 	@ADate(format = "yyyy-MM-dd hh")//日期注解，设置日期格式
-	private Date dateParam = new Date();
+	private Date dateParam;
 	
 	private XmlBean testParam;
 	
 	private List<XmlBean> testListParam;
+	
+	public XmlBean(){
+		try {
+			dateParam = new SimpleDateFormat("yyyy-MM-dd HH").parse("2014-12-14 08");
+		} catch (ParseException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	public String getStringParam() {
 		return stringParam;
