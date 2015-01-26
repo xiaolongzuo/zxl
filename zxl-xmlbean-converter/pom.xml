@@ -10,9 +10,8 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>cn.zxl</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>zxl-common</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
