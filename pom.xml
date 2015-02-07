@@ -49,7 +49,6 @@
 		<module>zxl-mvc-struts</module>
 		<module>zxl-mq-rabbit</module>
 		<module>zxl-xmlbean-converter</module>
-		<module>zxl-simple-ioc</module>
 		<module>zxl-code-study</module>
 	</modules>
 
